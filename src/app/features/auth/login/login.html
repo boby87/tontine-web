@@ -1,0 +1,106 @@
+<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-emerald-50 px-4 py-12">
+  <div class="w-full max-w-md">
+
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Connexion</h1>
+      <p class="mt-2 text-sm text-gray-500">Accédez à votre espace TontineConnect</p>
+    </div>
+
+    <!-- Erreur serveur -->
+    @if (serverError()) {
+      <div class="mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <svg class="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ serverError() }}</span>
+      </div>
+    }
+
+    <!-- Formulaire -->
+    <form novalidate (submit)="submit($event)" class="space-y-6 rounded-2xl bg-white p-8 shadow-xl ring-1 ring-gray-200">
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="mb-1 block text-sm font-medium text-gray-700">Adresse email</label>
+        <input
+          id="email"
+          type="email"
+          [formField]="f.email"
+          placeholder="jean.kamga&#64;email.com"
+          class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+          [class.border-gray-300]="fieldState(f.email()) === 'neutral'"
+          [class.focus\:ring-indigo-500]="fieldState(f.email()) === 'neutral'"
+          [class.border-red-500]="fieldState(f.email()) === 'invalid'"
+          [class.focus\:ring-red-500]="fieldState(f.email()) === 'invalid'"
+          [class.border-green-500]="fieldState(f.email()) === 'valid'"
+          [class.focus\:ring-green-500]="fieldState(f.email()) === 'valid'"
+        />
+        @if (f.email().touched() && f.email().invalid()) {
+          <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            @for (error of f.email().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Mot de passe -->
+      <div>
+        <label for="password" class="mb-1 block text-sm font-medium text-gray-700">Mot de passe</label>
+        <input
+          id="password"
+          type="password"
+          [formField]="f.password"
+          placeholder="Min. 8 caractères"
+          class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+          [class.border-gray-300]="fieldState(f.password()) === 'neutral'"
+          [class.focus\:ring-indigo-500]="fieldState(f.password()) === 'neutral'"
+          [class.border-red-500]="fieldState(f.password()) === 'invalid'"
+          [class.focus\:ring-red-500]="fieldState(f.password()) === 'invalid'"
+          [class.border-green-500]="fieldState(f.password()) === 'valid'"
+          [class.focus\:ring-green-500]="fieldState(f.password()) === 'valid'"
+        />
+        @if (f.password().touched() && f.password().invalid()) {
+          <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            @for (error of f.password().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Bouton submit -->
+      <button
+        type="submit"
+        class="w-full rounded-lg px-6 py-3 text-sm font-semibold text-white transition-colors"
+        [class.bg-indigo-600]="canSubmit()"
+        [class.hover\:bg-indigo-700]="canSubmit()"
+        [class.bg-gray-400]="!canSubmit()"
+        [class.cursor-not-allowed]="!canSubmit()"
+        [disabled]="!canSubmit()"
+      >
+        @if (isLoading()) {
+          <span class="flex items-center justify-center gap-2">
+            <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Connexion en cours…
+          </span>
+        } @else {
+          Se connecter
+        }
+      </button>
+
+      <!-- Lien register -->
+      <p class="text-center text-sm text-gray-500">
+        Pas encore de compte ?
+        <a routerLink="/register" class="font-medium text-indigo-600 hover:text-indigo-500">Créer un compte</a>
+      </p>
+
+    </form>
+  </div>
+</div>

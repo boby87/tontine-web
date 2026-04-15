@@ -1,0 +1,36 @@
+<div class="flex h-screen overflow-hidden bg-gray-50">
+  <!-- Mobile overlay -->
+  @if (navService.isSidebarOpen() && isMobile()) {
+    <div
+      class="fixed inset-0 z-30 bg-black/50 transition-opacity lg:hidden"
+      (click)="navService.closeSidebar()"
+      aria-hidden="true"
+    ></div>
+  }
+
+  <!-- Sidebar -->
+  <app-sidebar
+    [collapsed]="navService.isSidebarCollapsed()"
+    [open]="navService.isSidebarOpen()"
+    (collapseToggled)="navService.toggleCollapse()"
+    class="z-40"
+  />
+
+  <!-- Main content area -->
+  <div
+    [class]="
+      'flex flex-1 flex-col overflow-hidden transition-all duration-300 '
+      + (isMobile() ? '' : navService.sidebarWidth())
+    "
+    [style.margin-left]="isMobile() ? '0' : ''"
+  >
+    <app-navbar
+      (menuToggled)="navService.toggleSidebar()"
+      (collapseToggled)="navService.toggleCollapse()"
+    />
+
+    <main class="flex-1 overflow-y-auto p-4 lg:p-6">
+      <router-outlet />
+    </main>
+  </div>
+</div>

@@ -1,0 +1,307 @@
+<div class="flex min-h-screen items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-emerald-50 px-4 py-12">
+  <div class="w-full max-w-2xl">
+
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900">Créer un compte</h1>
+      <p class="mt-2 text-sm text-gray-500">Rejoignez TontineConnect et gérez vos tontines en toute simplicité</p>
+    </div>
+
+    <!-- Erreur serveur -->
+    @if (serverError()) {
+      <div class="mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <svg class="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clip-rule="evenodd" />
+        </svg>
+        <span>{{ serverError() }}</span>
+      </div>
+    }
+
+    <!-- Formulaire -->
+    <form novalidate (submit)="submit($event)" class="space-y-6 rounded-2xl bg-white p-8 shadow-xl ring-1 ring-gray-200">
+
+      <!-- Nom / Prénom -->
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <!-- Prénom -->
+        <div>
+          <label for="firstName" class="mb-1 block text-sm font-medium text-gray-700">Prénom</label>
+          <input
+            id="firstName"
+            type="text"
+            [formField]="f.firstName"
+            placeholder="Ex : Jean"
+            class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+            [class.border-gray-300]="fieldState(f.firstName()) === 'neutral'"
+            [class.focus\:ring-indigo-500]="fieldState(f.firstName()) === 'neutral'"
+            [class.border-red-500]="fieldState(f.firstName()) === 'invalid'"
+            [class.focus\:ring-red-500]="fieldState(f.firstName()) === 'invalid'"
+            [class.border-green-500]="fieldState(f.firstName()) === 'valid'"
+            [class.focus\:ring-green-500]="fieldState(f.firstName()) === 'valid'"
+          />
+          @if (f.firstName().touched() && f.firstName().invalid()) {
+            <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+              <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              @for (error of f.firstName().errors(); track error.kind) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Nom -->
+        <div>
+          <label for="lastName" class="mb-1 block text-sm font-medium text-gray-700">Nom</label>
+          <input
+            id="lastName"
+            type="text"
+            [formField]="f.lastName"
+            placeholder="Ex : Kamga"
+            class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+            [class.border-gray-300]="fieldState(f.lastName()) === 'neutral'"
+            [class.focus\:ring-indigo-500]="fieldState(f.lastName()) === 'neutral'"
+            [class.border-red-500]="fieldState(f.lastName()) === 'invalid'"
+            [class.focus\:ring-red-500]="fieldState(f.lastName()) === 'invalid'"
+            [class.border-green-500]="fieldState(f.lastName()) === 'valid'"
+            [class.focus\:ring-green-500]="fieldState(f.lastName()) === 'valid'"
+          />
+          @if (f.lastName().touched() && f.lastName().invalid()) {
+            <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+              <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              @for (error of f.lastName().errors(); track error.kind) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label for="email" class="mb-1 block text-sm font-medium text-gray-700">Adresse email</label>
+        <input
+          id="email"
+          type="email"
+          [formField]="f.email"
+          placeholder="jean.kamga@email.com"
+          class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+          [class.border-gray-300]="fieldState(f.email()) === 'neutral'"
+          [class.focus\:ring-indigo-500]="fieldState(f.email()) === 'neutral'"
+          [class.border-red-500]="fieldState(f.email()) === 'invalid'"
+          [class.focus\:ring-red-500]="fieldState(f.email()) === 'invalid'"
+          [class.border-green-500]="fieldState(f.email()) === 'valid'"
+          [class.focus\:ring-green-500]="fieldState(f.email()) === 'valid'"
+        />
+        @if (f.email().touched() && f.email().invalid()) {
+          <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            @for (error of f.email().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Téléphone -->
+      <div>
+        <label for="phone" class="mb-1 block text-sm font-medium text-gray-700">Téléphone</label>
+        <div class="flex items-stretch">
+          <span class="inline-flex items-center rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">+237</span>
+          <input
+            id="phone"
+            type="tel"
+            [formField]="f.phone"
+            placeholder="6 55 00 00 00"
+            class="w-full rounded-r-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+            [class.border-gray-300]="fieldState(f.phone()) === 'neutral'"
+            [class.focus\:ring-indigo-500]="fieldState(f.phone()) === 'neutral'"
+            [class.border-red-500]="fieldState(f.phone()) === 'invalid'"
+            [class.focus\:ring-red-500]="fieldState(f.phone()) === 'invalid'"
+            [class.border-green-500]="fieldState(f.phone()) === 'valid'"
+            [class.focus\:ring-green-500]="fieldState(f.phone()) === 'valid'"
+          />
+        </div>
+        @if (f.phone().touched() && f.phone().invalid()) {
+          <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            @for (error of f.phone().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+        @if (f.phone().touched() && f.phone().valid()) {
+          <p class="mt-1 text-sm text-green-600">{{ phonePreview() }}</p>
+        }
+      </div>
+
+      <!-- Mot de passe / Confirmation -->
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <!-- Mot de passe -->
+        <div>
+          <label for="password" class="mb-1 block text-sm font-medium text-gray-700">Mot de passe</label>
+          <input
+            id="password"
+            type="password"
+            [formField]="f.password"
+            placeholder="Min. 8 caractères"
+            class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+            [class.border-gray-300]="fieldState(f.password()) === 'neutral'"
+            [class.focus\:ring-indigo-500]="fieldState(f.password()) === 'neutral'"
+            [class.border-red-500]="fieldState(f.password()) === 'invalid'"
+            [class.focus\:ring-red-500]="fieldState(f.password()) === 'invalid'"
+            [class.border-green-500]="fieldState(f.password()) === 'valid'"
+            [class.focus\:ring-green-500]="fieldState(f.password()) === 'valid'"
+          />
+          @if (f.password().touched() && f.password().invalid()) {
+            <div class="mt-1 space-y-0.5 text-sm text-red-600">
+              @for (error of f.password().errors(); track error.kind) {
+                <div class="flex items-center gap-1">
+                  <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                  <span>{{ error.message }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- Confirmation -->
+        <div>
+          <label for="confirmPassword" class="mb-1 block text-sm font-medium text-gray-700">Confirmation</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            [formField]="f.confirmPassword"
+            placeholder="Confirmez le mot de passe"
+            class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+            [class.border-gray-300]="fieldState(f.confirmPassword()) === 'neutral'"
+            [class.focus\:ring-indigo-500]="fieldState(f.confirmPassword()) === 'neutral'"
+            [class.border-red-500]="fieldState(f.confirmPassword()) === 'invalid'"
+            [class.focus\:ring-red-500]="fieldState(f.confirmPassword()) === 'invalid'"
+            [class.border-green-500]="fieldState(f.confirmPassword()) === 'valid'"
+            [class.focus\:ring-green-500]="fieldState(f.confirmPassword()) === 'valid'"
+          />
+          @if (f.confirmPassword().touched() && f.confirmPassword().invalid()) {
+            <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+              <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              @for (error of f.confirmPassword().errors(); track error.kind) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Date de naissance -->
+      <div>
+        <label for="dateOfBirth" class="mb-1 block text-sm font-medium text-gray-700">Date de naissance</label>
+        <input
+          id="dateOfBirth"
+          type="date"
+          [formField]="f.dateOfBirth"
+          class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+          [class.border-gray-300]="fieldState(f.dateOfBirth()) === 'neutral'"
+          [class.focus\:ring-indigo-500]="fieldState(f.dateOfBirth()) === 'neutral'"
+          [class.border-red-500]="fieldState(f.dateOfBirth()) === 'invalid'"
+          [class.focus\:ring-red-500]="fieldState(f.dateOfBirth()) === 'invalid'"
+          [class.border-green-500]="fieldState(f.dateOfBirth()) === 'valid'"
+          [class.focus\:ring-green-500]="fieldState(f.dateOfBirth()) === 'valid'"
+        />
+        @if (f.dateOfBirth().touched() && f.dateOfBirth().invalid()) {
+          <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+            @for (error of f.dateOfBirth().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Région / CNI -->
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <!-- Région -->
+        <div>
+          <label for="region" class="mb-1 block text-sm font-medium text-gray-700">Région</label>
+          <select
+            id="region"
+            [formField]="f.region"
+            class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+            [class.border-gray-300]="fieldState(f.region()) === 'neutral'"
+            [class.focus\:ring-indigo-500]="fieldState(f.region()) === 'neutral'"
+            [class.border-red-500]="fieldState(f.region()) === 'invalid'"
+            [class.focus\:ring-red-500]="fieldState(f.region()) === 'invalid'"
+            [class.border-green-500]="fieldState(f.region()) === 'valid'"
+            [class.focus\:ring-green-500]="fieldState(f.region()) === 'valid'"
+          >
+            <option value="">-- Sélectionnez --</option>
+            @for (r of regions; track r) {
+              <option [value]="r">{{ regionLabels[r] }}</option>
+            }
+          </select>
+          @if (f.region().touched() && f.region().invalid()) {
+            <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+              <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              @for (error of f.region().errors(); track error.kind) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- CNI -->
+        <div>
+          <label for="cniNumber" class="mb-1 block text-sm font-medium text-gray-700">N° CNI</label>
+          <input
+            id="cniNumber"
+            type="text"
+            [formField]="f.cniNumber"
+            placeholder="Ex : 123456789"
+            class="w-full rounded-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+            [class.border-gray-300]="fieldState(f.cniNumber()) === 'neutral'"
+            [class.focus\:ring-indigo-500]="fieldState(f.cniNumber()) === 'neutral'"
+            [class.border-red-500]="fieldState(f.cniNumber()) === 'invalid'"
+            [class.focus\:ring-red-500]="fieldState(f.cniNumber()) === 'invalid'"
+            [class.border-green-500]="fieldState(f.cniNumber()) === 'valid'"
+            [class.focus\:ring-green-500]="fieldState(f.cniNumber()) === 'valid'"
+          />
+          @if (f.cniNumber().touched() && f.cniNumber().invalid()) {
+            <div class="mt-1 flex items-center gap-1 text-sm text-red-600">
+              <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+              @for (error of f.cniNumber().errors(); track error.kind) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Bouton submit -->
+      <button
+        type="submit"
+        class="w-full rounded-lg px-6 py-3 text-sm font-semibold text-white transition-colors"
+        [class.bg-indigo-600]="canSubmit()"
+        [class.hover\:bg-indigo-700]="canSubmit()"
+        [class.bg-gray-400]="!canSubmit()"
+        [class.cursor-not-allowed]="!canSubmit()"
+        [disabled]="!canSubmit()"
+      >
+        @if (isLoading()) {
+          <span class="flex items-center justify-center gap-2">
+            <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Inscription en cours…
+          </span>
+        } @else {
+          Créer mon compte
+        }
+      </button>
+
+      <!-- Lien login -->
+      <p class="text-center text-sm text-gray-500">
+        Déjà inscrit ?
+        <a routerLink="/login" class="font-medium text-indigo-600 hover:text-indigo-500">Se connecter</a>
+      </p>
+
+    </form>
+  </div>
+</div>
