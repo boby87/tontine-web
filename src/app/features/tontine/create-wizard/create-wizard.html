@@ -1,0 +1,489 @@
+<div class="mx-auto max-w-2xl px-4 py-8">
+  <!-- Titre -->
+  <h1 class="text-2xl font-bold text-gray-900">Créer une tontine</h1>
+  <p class="mt-1 text-sm text-gray-500">Configurez votre tontine en 2 étapes simples.</p>
+
+  <!-- ── Stepper ────────────────────────────── -->
+  <nav class="mt-8" aria-label="Étapes">
+    <ol class="flex items-center gap-2">
+      <!-- Étape 1 -->
+      <li class="flex items-center gap-2">
+        <span
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition-colors"
+          [class.bg-indigo-600]="currentStep() >= 1"
+          [class.text-white]="currentStep() >= 1"
+          [class.bg-gray-200]="currentStep() < 1"
+          [class.text-gray-600]="currentStep() < 1"
+        >1</span>
+        <span
+          class="hidden text-sm font-medium sm:inline"
+          [class.text-indigo-600]="currentStep() >= 1"
+          [class.text-gray-500]="currentStep() < 1"
+        >Informations</span>
+      </li>
+
+      <!-- Connecteur -->
+      <li class="flex-1">
+        <div
+          class="h-0.5 w-full transition-colors"
+          [class.bg-indigo-600]="currentStep() >= 2"
+          [class.bg-gray-200]="currentStep() < 2"
+        ></div>
+      </li>
+
+      <!-- Étape 2 -->
+      <li class="flex items-center gap-2">
+        <span
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold transition-colors"
+          [class.bg-indigo-600]="currentStep() >= 2"
+          [class.text-white]="currentStep() >= 2"
+          [class.bg-gray-200]="currentStep() < 2"
+          [class.text-gray-600]="currentStep() < 2"
+        >2</span>
+        <span
+          class="hidden text-sm font-medium sm:inline"
+          [class.text-indigo-600]="currentStep() >= 2"
+          [class.text-gray-500]="currentStep() < 2"
+        >Recrutement</span>
+      </li>
+    </ol>
+  </nav>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- ÉTAPE 1 — Informations                    -->
+  <!-- ══════════════════════════════════════════ -->
+  @if (currentStep() === 1) {
+    <form novalidate class="mt-8 space-y-6 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+
+      <!-- Nom de la tontine -->
+      <div>
+        <label for="nom" class="block text-sm font-medium text-gray-700">
+          Nom de la tontine <span class="text-red-500">*</span>
+        </label>
+        <input
+          id="nom"
+          type="text"
+          placeholder="Ex : Tontine des Bamilékés"
+          [formField]="infoForm.nom"
+          class="mt-1 w-full rounded-lg border px-4 py-2.5 text-sm transition-colors
+                 focus:outline-none focus:ring-2"
+          [class.border-gray-300]="!infoForm.nom().touched()"
+          [class.focus\:ring-indigo-500]="!infoForm.nom().touched()"
+          [class.border-red-500]="infoForm.nom().touched() && infoForm.nom().invalid()"
+          [class.focus\:ring-red-500]="infoForm.nom().touched() && infoForm.nom().invalid()"
+          [class.border-green-500]="infoForm.nom().touched() && infoForm.nom().valid()"
+          [class.focus\:ring-green-500]="infoForm.nom().touched() && infoForm.nom().valid()"
+        />
+        @if (infoForm.nom().touched() && infoForm.nom().invalid()) {
+          <div class="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+            @for (error of infoForm.nom().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+        @if (infoForm.nom().touched() && infoForm.nom().valid()) {
+          <div class="mt-1.5 flex items-center gap-1 text-sm text-green-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>Valide</span>
+          </div>
+        }
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-700">
+          Description
+        </label>
+        <textarea
+          id="description"
+          rows="3"
+          placeholder="Décrivez brièvement votre tontine…"
+          [formField]="infoForm.description"
+          class="mt-1 w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition-colors
+                 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        ></textarea>
+      </div>
+
+      <!-- Devise (lecture seule via formReadonly) -->
+      <div>
+        <label for="devise" class="block text-sm font-medium text-gray-700">
+          Devise
+        </label>
+        <input
+          id="devise"
+          type="text"
+          [formField]="infoForm.devise"
+          class="mt-1 w-full cursor-not-allowed rounded-lg border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm text-gray-500"
+        />
+      </div>
+
+      <!-- Montant de cotisation -->
+      <div>
+        <label for="montant" class="block text-sm font-medium text-gray-700">
+          Montant de cotisation (XAF) <span class="text-red-500">*</span>
+        </label>
+        <input
+          id="montant"
+          type="number"
+          placeholder="5000"
+          [formField]="infoForm.montantCotisation"
+          class="mt-1 w-full rounded-lg border px-4 py-2.5 text-sm transition-colors
+                 focus:outline-none focus:ring-2"
+          [class.border-gray-300]="!infoForm.montantCotisation().touched()"
+          [class.focus\:ring-indigo-500]="!infoForm.montantCotisation().touched()"
+          [class.border-red-500]="infoForm.montantCotisation().touched() && infoForm.montantCotisation().invalid()"
+          [class.focus\:ring-red-500]="infoForm.montantCotisation().touched() && infoForm.montantCotisation().invalid()"
+          [class.border-green-500]="infoForm.montantCotisation().touched() && infoForm.montantCotisation().valid()"
+          [class.focus\:ring-green-500]="infoForm.montantCotisation().touched() && infoForm.montantCotisation().valid()"
+        />
+        @if (infoForm.montantCotisation().touched() && infoForm.montantCotisation().invalid()) {
+          <div class="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+            @for (error of infoForm.montantCotisation().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+        @if (infoForm.montantCotisation().touched() && infoForm.montantCotisation().valid()) {
+          <div class="mt-1.5 flex items-center gap-1 text-sm text-green-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>Valide</span>
+          </div>
+        }
+      </div>
+
+      <!-- Fréquence de cotisation -->
+      <div>
+        <label for="frequency" class="block text-sm font-medium text-gray-700">
+          Fréquence des séances <span class="text-red-500">*</span>
+        </label>
+        <select
+          id="frequency"
+          [formField]="infoForm.contributionFrequency"
+          class="mt-1 w-full rounded-lg border px-4 py-2.5 text-sm transition-colors
+                 focus:outline-none focus:ring-2"
+          [class.border-gray-300]="!infoForm.contributionFrequency().touched()"
+          [class.focus\:ring-indigo-500]="!infoForm.contributionFrequency().touched()"
+          [class.border-red-500]="infoForm.contributionFrequency().touched() && infoForm.contributionFrequency().invalid()"
+          [class.focus\:ring-red-500]="infoForm.contributionFrequency().touched() && infoForm.contributionFrequency().invalid()"
+          [class.border-green-500]="infoForm.contributionFrequency().touched() && infoForm.contributionFrequency().valid()"
+          [class.focus\:ring-green-500]="infoForm.contributionFrequency().touched() && infoForm.contributionFrequency().valid()"
+        >
+          <option value="">-- Choisir --</option>
+          <option value="WEEKLY">Hebdomadaire</option>
+          <option value="BIWEEKLY">Bi-mensuel</option>
+          <option value="MONTHLY">Mensuel</option>
+        </select>
+        @if (infoForm.contributionFrequency().touched() && infoForm.contributionFrequency().invalid()) {
+          <div class="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+            @for (error of infoForm.contributionFrequency().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+        @if (infoForm.contributionFrequency().touched() && infoForm.contributionFrequency().valid()) {
+          <div class="mt-1.5 flex items-center gap-1 text-sm text-green-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>Valide</span>
+          </div>
+        }
+      </div>
+
+      <!-- Mode de distribution -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          Mode de distribution <span class="text-red-500">*</span>
+        </label>
+        <div class="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-3 text-sm transition-colors hover:bg-gray-50"
+            [class.border-indigo-500]="infoForm.distributionMode().value() === 'ROTATION'"
+            [class.bg-indigo-50]="infoForm.distributionMode().value() === 'ROTATION'"
+            [class.border-gray-300]="infoForm.distributionMode().value() !== 'ROTATION'"
+          >
+            <input type="radio" value="ROTATION" [formField]="infoForm.distributionMode" class="accent-indigo-600" />
+            <div>
+              <span class="font-medium">Rotation</span>
+              <p class="text-xs text-gray-500">Chaque membre à tour de rôle</p>
+            </div>
+          </label>
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-3 text-sm transition-colors hover:bg-gray-50"
+            [class.border-indigo-500]="infoForm.distributionMode().value() === 'AUCTION'"
+            [class.bg-indigo-50]="infoForm.distributionMode().value() === 'AUCTION'"
+            [class.border-gray-300]="infoForm.distributionMode().value() !== 'AUCTION'"
+          >
+            <input type="radio" value="AUCTION" [formField]="infoForm.distributionMode" class="accent-indigo-600" />
+            <div>
+              <span class="font-medium">Enchères</span>
+              <p class="text-xs text-gray-500">Au plus offrant</p>
+            </div>
+          </label>
+          <label
+            class="flex cursor-pointer items-center gap-2 rounded-lg border px-4 py-3 text-sm transition-colors hover:bg-gray-50"
+            [class.border-indigo-500]="infoForm.distributionMode().value() === 'LOTTERY'"
+            [class.bg-indigo-50]="infoForm.distributionMode().value() === 'LOTTERY'"
+            [class.border-gray-300]="infoForm.distributionMode().value() !== 'LOTTERY'"
+          >
+            <input type="radio" value="LOTTERY" [formField]="infoForm.distributionMode" class="accent-indigo-600" />
+            <div>
+              <span class="font-medium">Tirage</span>
+              <p class="text-xs text-gray-500">Bénéficiaire aléatoire</p>
+            </div>
+          </label>
+        </div>
+        @if (infoForm.distributionMode().touched() && infoForm.distributionMode().invalid()) {
+          <div class="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                clip-rule="evenodd" />
+            </svg>
+            @for (error of infoForm.distributionMode().errors(); track error.kind) {
+              <span>{{ error.message }}</span>
+            }
+          </div>
+        }
+        @if (infoForm.distributionMode().touched() && infoForm.distributionMode().valid()) {
+          <div class="mt-1.5 flex items-center gap-1 text-sm text-green-600">
+            <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                clip-rule="evenodd" />
+            </svg>
+            <span>Valide</span>
+          </div>
+        }
+      </div>
+
+      <!-- Bouton suivant -->
+      <div class="flex justify-end pt-4">
+        <button
+          type="button"
+          (click)="nextStep()"
+          class="inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors"
+          [class.bg-indigo-600]="isStep1Valid()"
+          [class.hover\:bg-indigo-700]="isStep1Valid()"
+          [class.bg-gray-400]="!isStep1Valid()"
+          [class.cursor-not-allowed]="!isStep1Valid()"
+          [disabled]="!isStep1Valid()"
+        >
+          Suivant
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      </div>
+    </form>
+  }
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- ÉTAPE 2 — Recrutement                     -->
+  <!-- ══════════════════════════════════════════ -->
+  @if (currentStep() === 2) {
+    <div class="mt-8 space-y-6">
+
+      <!-- Section : Lien d'invitation (widget réutilisable) -->
+      <app-invite-link-widget [tontineNom]="infoForm.nom().value()" />
+
+      <!-- Section : Ajout direct -->
+      <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <h2 class="text-lg font-semibold text-gray-900">Ajout direct</h2>
+        <p class="mt-1 text-sm text-gray-500">Recherchez un membre par son numéro de téléphone camerounais.</p>
+
+        <!-- Champ de recherche via [formField] -->
+        <div class="mt-4">
+          <label for="searchPhone" class="block text-sm font-medium text-gray-700">
+            Numéro de téléphone <span class="text-red-500">*</span>
+          </label>
+          <div class="mt-1 flex gap-2">
+            <div class="flex items-center rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 px-3 text-sm text-gray-500">
+              +237
+            </div>
+            <input
+              id="searchPhone"
+              type="tel"
+              placeholder="6 XX XX XX XX"
+              [formField]="phoneForm.phone"
+              class="w-full rounded-r-lg border px-4 py-2.5 text-sm transition-colors focus:outline-none focus:ring-2"
+              [class.border-gray-300]="!phoneForm.phone().touched()"
+              [class.focus\:ring-indigo-500]="!phoneForm.phone().touched()"
+              [class.border-red-500]="phoneForm.phone().touched() && phoneForm.phone().invalid()"
+              [class.focus\:ring-red-500]="phoneForm.phone().touched() && phoneForm.phone().invalid()"
+              [class.border-green-500]="phoneForm.phone().touched() && phoneForm.phone().valid()"
+              [class.focus\:ring-green-500]="phoneForm.phone().touched() && phoneForm.phone().valid()"
+            />
+            <button
+              type="button"
+              (click)="searchMember()"
+              class="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition-colors"
+              [class.bg-indigo-600]="isPhoneValid()"
+              [class.hover\:bg-indigo-700]="isPhoneValid()"
+              [class.bg-gray-400]="!isPhoneValid()"
+              [class.cursor-not-allowed]="!isPhoneValid()"
+              [disabled]="!isPhoneValid() || isSearching()"
+            >
+              @if (isSearching()) {
+                <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+              } @else {
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+              }
+              Rechercher
+            </button>
+          </div>
+
+          @if (phoneForm.phone().touched() && phoneForm.phone().invalid()) {
+            <div class="mt-1.5 flex items-center gap-1 text-sm text-red-600">
+              <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                  clip-rule="evenodd" />
+              </svg>
+              @for (error of phoneForm.phone().errors(); track error.kind) {
+                <span>{{ error.message }}</span>
+              }
+            </div>
+          }
+          @if (phoneForm.phone().touched() && phoneForm.phone().valid()) {
+            <div class="mt-1.5 flex items-center gap-1 text-sm text-green-600">
+              <svg class="h-4 w-4 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd" />
+              </svg>
+              <span>Valide</span>
+            </div>
+          }
+        </div>
+
+        <!-- Résultats de recherche -->
+        @if (searchResults().length > 0) {
+          <ul class="mt-4 divide-y divide-gray-100 rounded-lg border border-gray-200">
+            @for (result of searchResults(); track result.userId) {
+              <li class="flex items-center justify-between p-3 hover:bg-gray-50">
+                <div>
+                  <p class="text-sm font-medium text-gray-900">{{ result.firstName }} {{ result.lastName }}</p>
+                  <p class="text-xs text-gray-500">{{ result.phone }}</p>
+                </div>
+                <button
+                  type="button"
+                  (click)="addMember(result)"
+                  class="inline-flex items-center gap-1 rounded-md bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700 transition-colors hover:bg-green-100"
+                >
+                  <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Ajouter
+                </button>
+              </li>
+            }
+          </ul>
+        }
+
+        <!-- Membres ajoutés -->
+        @if (addedMembers().length > 0) {
+          <div class="mt-6">
+            <h3 class="text-sm font-medium text-gray-700">
+              Membres ajoutés ({{ addedMembers().length }})
+            </h3>
+            <ul class="mt-2 space-y-2">
+              @for (member of addedMembers(); track member.userId) {
+                <li class="flex items-center justify-between rounded-lg bg-indigo-50 px-4 py-2.5">
+                  <div class="flex items-center gap-3">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-200 text-xs font-semibold text-indigo-700">
+                      {{ member.firstName[0] }}{{ member.lastName[0] }}
+                    </span>
+                    <div>
+                      <p class="text-sm font-medium text-gray-900">{{ member.firstName }} {{ member.lastName }}</p>
+                      <p class="text-xs text-gray-500">{{ member.phone }}</p>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    (click)="removeMember(member.userId)"
+                    class="rounded p-1 text-red-400 transition-colors hover:bg-red-100 hover:text-red-600"
+                    title="Retirer"
+                  >
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+
+      <!-- Boutons navigation -->
+      <div class="flex items-center justify-between pt-2">
+        <button
+          type="button"
+          (click)="previousStep()"
+          class="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+        >
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Retour
+        </button>
+
+        <button
+          type="button"
+          (click)="submit()"
+          class="inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-sm font-semibold text-white transition-colors"
+          [class.bg-indigo-600]="canSubmit()"
+          [class.hover\:bg-indigo-700]="canSubmit()"
+          [class.bg-gray-400]="!canSubmit()"
+          [class.cursor-not-allowed]="!canSubmit()"
+          [disabled]="!canSubmit()"
+        >
+          @if (isSubmitting()) {
+            <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            Création en cours…
+          } @else {
+            Créer la tontine
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          }
+        </button>
+      </div>
+    </div>
+  }
+</div>
