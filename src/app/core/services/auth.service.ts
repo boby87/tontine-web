@@ -1,18 +1,16 @@
 import { Injectable, inject, signal, computed, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { switchMap } from 'rxjs';
 import {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
 } from '../models/auth.model';
-import { UserResponse } from '../models/api.model';
-import { environment } from '../../../environments/environment';
 
-const API_URL = `${environment.apiUrl}/api/v1`;
+const API_URL = 'http://localhost:8080/api/v1';
 const TOKEN_KEY = 'access_token';
+const REFRESH_KEY = 'refresh_token';
 const USER_KEY = 'current_user';
 
 @Injectable({ providedIn: 'root' })
@@ -21,7 +19,7 @@ export class AuthService {
   private readonly router = inject(Router);
 
   // ── État privé mutable ──────────────────────
-  private readonly _currentUser = signal<UserResponse | null>(this.loadUser());
+  private readonly _currentUser = signal<RegisterResponse | null>(this.loadUser());
   private readonly _accessToken = signal<string | null>(this.loadToken());
   private readonly _isLoading = signal(false);
   private readonly _error = signal<string | null>(null);
@@ -72,16 +70,11 @@ export class AuthService {
     this._isLoading.set(true);
     this._error.set(null);
 
-    this.http.post<LoginResponse>(`${API_URL}/auth/login`, request).pipe(
-      switchMap((loginRes) => {
-        this._accessToken.set(loginRes.accessToken);
-        return this.http.get<UserResponse>(`${API_URL}/users/${loginRes.userId}`, {
-          headers: { Authorization: `${loginRes.tokenType} ${loginRes.accessToken}` },
-        });
-      }),
-    ).subscribe({
-      next: (user) => {
-        this._currentUser.set(user);
+    this.http.post<LoginResponse>(`${API_URL}/users/login`, request).subscribe({
+      next: (response) => {
+        this._accessToken.set(response.accessToken);
+        localStorage.setItem(REFRESH_KEY, response.refreshToken);
+        this._currentUser.set(response.user);
         this._isLoading.set(false);
         this.router.navigateByUrl('/dashboard');
       },
@@ -111,6 +104,7 @@ export class AuthService {
   logout(): void {
     this._accessToken.set(null);
     this._currentUser.set(null);
+    localStorage.removeItem(REFRESH_KEY);
     this.router.navigateByUrl('/login');
   }
 
@@ -124,11 +118,11 @@ export class AuthService {
     return localStorage.getItem(TOKEN_KEY);
   }
 
-  private loadUser(): UserResponse | null {
+  private loadUser(): RegisterResponse | null {
     const raw = localStorage.getItem(USER_KEY);
     if (!raw) return null;
     try {
-      return JSON.parse(raw) as UserResponse;
+      return JSON.parse(raw) as RegisterResponse;
     } catch {
       return null;
     }

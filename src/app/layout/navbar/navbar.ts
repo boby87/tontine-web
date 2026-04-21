@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, inject, output } from '@angular/core';
-import { AuthService } from '../../core/services/auth.service';
+import { UserService } from '../../core/services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -7,12 +7,8 @@ import { AuthService } from '../../core/services/auth.service';
   templateUrl: './navbar.html',
 })
 export class NavbarComponent {
-  protected readonly authService = inject(AuthService);
+  protected readonly userService = inject(UserService);
 
   readonly menuToggled = output<void>();
   readonly collapseToggled = output<void>();
-
-  protected logout(): void {
-    this.authService.logout();
-  }
 }

@@ -27,7 +27,8 @@ export interface RegisterResponse {
 }
 
 // ──────────────────────────────────────────────
-// Auth — Login (depuis OpenAPI LoginRequest / LoginResponse)
+// Auth — Login (non présent dans le spec OpenAPI,
+// interfaces déduites du pattern JWT standard)
 // ──────────────────────────────────────────────
 
 export interface LoginRequest {
@@ -37,8 +38,7 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   accessToken: string;
-  tokenType: string;
-  userId: string;
-  email: string;
-  role: string;
+  refreshToken: string;
+  expiresIn: number;          // durée de validité en secondes
+  user: RegisterResponse;
 }

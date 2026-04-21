@@ -1,64 +1,26 @@
-import { Component, ChangeDetectionStrategy, inject, computed, OnInit } from '@angular/core';
-import { DatePipe, DecimalPipe } from '@angular/common';
-import { DashboardService } from './services/dashboard.service';
-import { ContributionResponse } from '../../core/models/api.model';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, DecimalPipe],
-  templateUrl: './dashboard.html',
+  template: `
+    <div class="space-y-6">
+      <h2 class="text-2xl font-bold text-gray-900">Tableau de bord</h2>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <p class="text-sm font-medium text-gray-500">Cotisations du mois</p>
+          <p class="mt-2 text-3xl font-bold text-gray-900">250 000 XAF</p>
+        </div>
+        <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <p class="text-sm font-medium text-gray-500">Membres actifs</p>
+          <p class="mt-2 text-3xl font-bold text-gray-900">24</p>
+        </div>
+        <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+          <p class="text-sm font-medium text-gray-500">Prochaine séance</p>
+          <p class="mt-2 text-3xl font-bold text-gray-900">20 Avr</p>
+        </div>
+      </div>
+    </div>
+  `,
 })
-export class DashboardComponent implements OnInit {
-  protected readonly ds = inject(DashboardService);
-
-  /** Nom de la première tontine active */
-  protected readonly activeTontineName = computed(() => {
-    const data = this.ds.summary();
-    if (!data || data.tontines.length === 0) return 'Aucune tontine';
-    return data.tontines[0].nom;
-  });
-
-  /** Montant formaté en XAF */
-  protected readonly formattedCagnotte = computed(() =>
-    new Intl.NumberFormat('fr-CM', { style: 'currency', currency: 'XAF', maximumFractionDigits: 0 })
-      .format(this.ds.totalCagnotte()),
-  );
-
-  /** Compte à rebours simple (J-X) */
-  protected readonly countdown = computed(() => {
-    const dateStr = this.ds.nextSessionDate();
-    if (!dateStr) return 'Aucune séance';
-
-    const target = new Date(dateStr + 'T00:00:00');
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const diffMs = target.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-
-    if (diffDays === 0) return "Aujourd'hui";
-    if (diffDays === 1) return 'Demain';
-    return `J-${diffDays}`;
-  });
-
-  /** Taux de présence (cotisations payées / total membres) */
-  protected readonly attendanceRate = computed(() => {
-    const data = this.ds.summary();
-    if (!data || data.totalMembers === 0) return 0;
-    const paid = data.currentSessionContributions.filter(c => c.statut === 'PAID' || c.statut === 'LATE_PAID').length;
-    return Math.round((paid / data.totalMembers) * 100);
-  });
-
-  /** 5 dernières transactions triées par date décroissante */
-  protected readonly recentTransactions = computed<ContributionResponse[]>(() => {
-    const data = this.ds.summary();
-    if (!data) return [];
-    return [...data.currentSessionContributions]
-      .sort((a, b) => b.dateOperation.localeCompare(a.dateOperation))
-      .slice(0, 5);
-  });
-
-  ngOnInit(): void {
-    this.ds.loadStatistics();
-  }
-}
+export class DashboardComponent {}
